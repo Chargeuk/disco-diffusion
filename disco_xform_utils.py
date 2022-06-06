@@ -84,6 +84,9 @@ def transform_image_3d(img_filepath, midas_model, midas_transform, device, rot_m
     else:
         depth_map = prediction_np
 
+    # save the depth map as seen here: https://pytorch.org/hub/intelisl_midas_v2/
+    depth_map_to_save = depth_map
+
     depth_map = np.expand_dims(depth_map, axis=0)
     depth_tensor = torch.from_numpy(depth_map).squeeze().to(device)
 
@@ -119,7 +122,7 @@ def transform_image_3d(img_filepath, midas_model, midas_transform, device, rot_m
 
     torch.cuda.empty_cache()
 
-    return img_pil
+    return img_pil, depth_map_to_save
 
 def get_spherical_projection(H, W, center, magnitude,device):  
     xx, yy = torch.linspace(-1, 1, W,dtype=torch.float32,device=device), torch.linspace(-1, 1, H,dtype=torch.float32,device=device)  
